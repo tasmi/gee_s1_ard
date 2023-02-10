@@ -136,8 +136,12 @@ def s1_preproc(params):
         .filter(ee.Filter.eq('instrumentMode', 'IW'))\
         .filter(ee.Filter.eq('resolution_meters', 10)) \
         .filter(ee.Filter.listContains('transmitterReceiverPolarisation', 'VH'))\
-        .filterDate(START_DATE, STOP_DATE) \
-        .filterBounds(ROI)
+            
+    if START_DATE:
+        s1 = s1.filterDate(START_DATE, STOP_DATE)
+        
+    if ROI:
+        s1 = s1.filterBounds(ROI)
 
     if (PLATFORM_NUMBER=='A' or PLATFORM_NUMBER=='B' ):
         s1 = s1.filter(ee.Filter.eq('platform_number', PLATFORM_NUMBER))
@@ -160,7 +164,7 @@ def s1_preproc(params):
     elif (POLARIZATION == 'VVVH'):
         s1 = s1.select(['VV', 'VH', 'angle'])
         
-    print('Number of images in collection: ', s1.size().getInfo())
+    #print('Number of images in collection: ', s1.size().getInfo())
 
     ###########################################
     # 2. ADDITIONAL BORDER NOISE CORRECTION
@@ -171,6 +175,7 @@ def s1_preproc(params):
         print('Additional border noise correction is completed')
     else:
         s1_1 = s1
+        
     ########################
     # 3. SPECKLE FILTERING
     #######################
@@ -188,10 +193,7 @@ def s1_preproc(params):
     #######################
 
     if (APPLY_TERRAIN_FLATTENING):
-        s1_1 = (trf.slope_correction(s1_1 
-                                    ,TERRAIN_FLATTENING_MODEL
-                                        ,DEM
-                                                ,TERRAIN_FLATTENING_ADDITIONAL_LAYOVER_SHADOW_BUFFER))
+        s1_1 = (trf.slope_correction(s1_1, TERRAIN_FLATTENING_MODEL, DEM, TERRAIN_FLATTENING_ADDITIONAL_LAYOVER_SHADOW_BUFFER))
         print('Radiometric terrain normalization is completed')
 
     ########################
@@ -200,7 +202,6 @@ def s1_preproc(params):
 
     if (FORMAT == 'DB'):
         s1_1 = s1_1.map(helper.lin_to_db)
-        
         
     #clip to roi
     if (CLIP_TO_ROI):

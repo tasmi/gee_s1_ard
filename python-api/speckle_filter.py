@@ -273,8 +273,6 @@ def RefinedLee(image):
     
     return image.addBands(result, None, True) 
 
-
-
 def leesigma(image,KERNEL_SIZE):
     """
     Implements the improved lee sigma filter to one image. 
@@ -391,7 +389,6 @@ def leesigma(image,KERNEL_SIZE):
 #---------------------------------------------------------------------------//
 # 2. MONO-TEMPORAL SPECKLE FILTER (WRAPPER)
 #---------------------------------------------------------------------------//
-
 
 def MonoTemporal_Filter(coll,KERNEL_SIZE, SPECKLE_FILTER) :
     """
