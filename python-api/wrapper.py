@@ -136,6 +136,7 @@ def s1_preproc(params):
         .filter(ee.Filter.eq('instrumentMode', 'IW'))\
         .filter(ee.Filter.eq('resolution_meters', 10)) \
         .filter(ee.Filter.listContains('transmitterReceiverPolarisation', 'VH'))\
+        .filter(ee.Filter.listContains('transmitterReceiverPolarisation', 'VV'))
             
     if START_DATE:
         s1 = s1.filterDate(START_DATE, STOP_DATE)
